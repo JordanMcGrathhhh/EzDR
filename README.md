@@ -9,4 +9,5 @@ That would make things significantly easier, I probably should have. Something a
 
 ## Current Issues
 Currently, EzDR reads logs from logman-generated ETW streams only. This will hopefully be fixed soon. The command to generate this stream is detailed in EzDR.cpp
+
 _logman start EzDRLogger "Microsoft-Windows-Kernel-Process" 0x10, 0x40 -ets -rt_
