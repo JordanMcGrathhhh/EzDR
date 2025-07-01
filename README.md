@@ -7,7 +7,7 @@ Obviously, ETW is not a full-fledged EDR solution. A kernel-bound driver will al
 ## Why not just use the Sysmon ETW trace session? 
 That would make things significantly easier, I probably should have. Something about making this project as difficult as possible seemed appealing to me. While it's caused many stress-induced headaches, it has also taught me a lot!
 
-## Current Issues
-Currently, EzDR reads logs from logman-generated ETW streams only. This will hopefully be fixed soon. The command to generate this stream is detailed in EzDR.cpp
+## Usage
+EzDR will start and stop trace sessions automatically. Simply compile and run EzDR to begin logging the currently supported _EVENT_TRACE_FLAGS_*_. 
 
-_logman start EzDRLogger "Microsoft-Windows-Kernel-Process" 0x10, 0x40 -ets -rt_
+With some basic modifications you could also configure EzDR to read logman-controlled ETW sessions. (Just comment out the _startEzTrace()_ calls!) 
