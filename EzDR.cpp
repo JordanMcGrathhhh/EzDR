@@ -5,13 +5,15 @@
 
 #include <stdio.h>
 
-//#include "EzDR.h"
+//#include "EzDR.h" // Not currently implemented, brought functions back to main for testing. 
 
 #pragma comment(lib, "advapi32.lib")
 #pragma comment(lib, "tdh.lib")
 
 #define PRIVATE_LOGGER_NAME L"EzDRLogger"
 
+// This is currently "working" but not really. Use manual ETW setup with logman (detailed below). 
+/*
 // Define this before using SystemTraceControlGuid
 const GUID SystemTraceControlGuid =
 { 0x9e814aad, 0x3204, 0x11d2, {0x9a, 0x82, 0x00, 0x60, 0x08, 0xa8, 0x69, 0x39} };
@@ -27,6 +29,7 @@ GUID DummyGuid = {
     0x00000000, 0x0000, 0x0000,
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 };
+
 
 ULONG WINAPI StartEzTrace(PTRACEHANDLE hStartEzTrace)
 {
@@ -78,9 +81,11 @@ ULONG WINAPI StartEzTrace(PTRACEHANDLE hStartEzTrace)
 
     return startStatus;
 }
+*/
 
 void WINAPI handleEvent(PEVENT_RECORD EventRecord)
 {
+
     FILETIME timestamp;
     SYSTEMTIME systemtime;
 
@@ -134,9 +139,9 @@ void WINAPI handleEvent(PEVENT_RECORD EventRecord)
     for (int i = 0; i < TraceEventInfoBuffer->TopLevelPropertyCount; i++)
     {
 
-        DWORD nameOffset = TraceEventInfoBuffer->EventPropertyInfoArray[i].NameOffset; //
-        PCWSTR propertyName = (PCWSTR)((PBYTE)TraceEventInfoBuffer + nameOffset); //
-        wprintf(L"[*] Parsing field: %s = ", propertyName); //
+        DWORD nameOffset = TraceEventInfoBuffer->EventPropertyInfoArray[i].NameOffset; 
+        PCWSTR propertyName = (PCWSTR)((PBYTE)TraceEventInfoBuffer + nameOffset);
+        wprintf(L"[*] Parsing field: %s = ", propertyName);
 
         ULONG formatPropertyStatus = ERROR_SUCCESS;
 
@@ -187,16 +192,16 @@ void WINAPI handleEvent(PEVENT_RECORD EventRecord)
         {
             printf("[!] Error: %d. Failed TdhFormatProperty();\n", GetLastError());
         }
-
+        
         wprintf(L"%s\n", buffer);
         
         UserDataLength -= UserDataConsumed;
         UserData += (BYTE) UserDataConsumed;
-
-        free(TraceEventInfoBuffer);
+        
         free(buffer);
     }
 
+    free(TraceEventInfoBuffer);
     printf("\n");
     //exit(-1); // Temporary, used to only print one event for testing!
 }   
@@ -212,6 +217,7 @@ int main(int argc, char* argv[])
     // -rt: Run the Event Trace Session in real-time mode.
     // -p A single Event Trace provider to enable. The terms 'Flags' and 'Keywords' are synonymous in this context.
 
+    /*
     TRACEHANDLE hStartTrace;
     ULONG startStatus = StartEzTrace(&hStartTrace);
 
@@ -238,6 +244,7 @@ int main(int argc, char* argv[])
         &EnableParameters);
 
     // /Try enabling first?
+    */
 
     TRACEHANDLE hTrace;
 
